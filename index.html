@@ -1,11 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Redirecting...</title>
-  <meta http-equiv="refresh" content="0; url=https://www.sunsurfnet.com/337X854/4JJ423J/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <script src="https://cdn.jsdelivr.net/npm/geoip-lite@1.5.0/geoip.min.js"></script>
 </head>
 <body>
-  <p>Redirecting... If nothing happens, <a href="https://www.sunsurfnet.com/337X854/4JJ423J/">click here</a>.</p>
+    <p id="message">Checking your location...</p>
+
+    <script>
+        // Replace this with your actual target link
+        const targetLink = "https://www.amazon.com/";
+
+        async function redirectUser() {
+            try {
+                // Get visitor info from free API
+                const res = await fetch("https://ipapi.co/json/");
+                const data = await res.json();
+
+                if(data.country === "US") {
+                    document.getElementById("message").innerText = 
+                        "Sorry, this link is not available in your country.";
+                } else {
+                    window.location.href = targetLink;
+                }
+            } catch (e) {
+                // If API fails, redirect anyway
+                window.location.href = targetLink;
+            }
+        }
+
+        redirectUser();
+    </script>
 </body>
 </html>
