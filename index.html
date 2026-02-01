@@ -10,44 +10,40 @@
 <p id="message">Checking access...</p>
 
 <script>
-// ===== SETTINGS =====
 const blockedIPs = [
   "196.217.67.169",
   "111.111.111.111",
   "222.222.222.222"
 ];
 
-const targetLink = "https://www.youtube.com/";
-// ====================
+const targetLink = "https://your-target-link.com";
 
 async function checkAccess() {
     try {
-        // Get IP + country in one request
+        // Get IP + country info
         const res = await fetch("https://ipapi.co/json/");
         const data = await res.json();
 
-        const userIP = data.ip;
+        const userIP = data.ip.trim();      // Remove any extra spaces
         const country = data.country;
 
-        // Block specific IPs
+        // 1️⃣ Check blocked IPs first
         if (blockedIPs.includes(userIP)) {
-            document.getElementById("message").innerText =
-                "Access blocked for your IP.";
-            return;
+            document.getElementById("message").innerText = "Access blocked for your IP.";
+            return; // Stop further checks
         }
 
-        // Block USA
+        // 2️⃣ Check country block
         if (country === "US") {
-            document.getElementById("message").innerText =
-                "This link is not available in your country.";
+            document.getElementById("message").innerText = "This link is not available in your country.";
             return;
         }
 
-        // Allow access
+        // 3️⃣ Redirect allowed users
         window.location.href = targetLink;
 
     } catch (e) {
-        // If API fails, allow access
+        // If API fails, redirect anyway
         window.location.href = targetLink;
     }
 }
