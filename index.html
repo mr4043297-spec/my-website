@@ -1,37 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting...</title>
-    <script src="https://cdn.jsdelivr.net/npm/geoip-lite@1.5.0/geoip.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redirecting...</title>
 </head>
 <body>
-    <p id="message">Checking your location...</p>
+<p id="message">Checking access...</p>
 
-    <script>
-        // Replace this with your actual target link
-        const targetLink = "https://www.amazon.com/";
+<script>
+// List of specific IPs you want to block
+const blockedIPs = [
+  "123.123.123.123",
+  "111.111.111.111",
+  "222.222.222.222"
+];
 
-        async function redirectUser() {
-            try {
-                // Get visitor info from free API
-                const res = await fetch("https://ipapi.co/json/");
-                const data = await res.json();
+// Replace this with your actual target link
+const targetLink = "https://www.amazon.com/";
 
-                if(data.country === "US") {
-                    document.getElementById("message").innerText = 
-                        "Sorry, this link is not available in your country.";
-                } else {
-                    window.location.href = targetLink;
-                }
-            } catch (e) {
-                // If API fails, redirect anyway
-                window.location.href = targetLink;
-            }
+// Function to check user's IP and country
+async function checkAccess() {
+    try {
+        // Get visitor info
+        const res = await fetch("https://ipapi.co/json/");
+        const data = await res.json();
+
+        const userIP = data.ip;
+        const userCountry = data.country;
+
+        if(blockedIPs.includes(userIP)) {
+            document.getElementById("message").innerText = "Access blocked for your IP.";
+        } else if(userCountry === "US") {
+            document.getElementById("message").innerText = "Access blocked for your country.";
+        } else {
+            window.location.href = targetLink;
         }
+    } catch (e) {
+        // If API fails, redirect anyway
+        window.location.href = targetLink;
+    }
+}
 
-        redirectUser();
-    </script>
+checkAccess();
+</script>
 </body>
 </html>
