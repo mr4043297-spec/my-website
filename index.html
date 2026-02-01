@@ -9,32 +9,24 @@
 <p id="message">Checking access...</p>
 
 <script>
-// List of IPs to block
 const blockedIPs = [
   "196.217.67.169",
   "111.111.111.111",
   "222.222.222.222"
 ];
 
-// Your target link
-const targetLink = "https://ip8.com/";
+// Replace this with your actual link
+const targetLink = "https://your-target-link.com";
 
-// Function to check visitor IP and country
-async function checkAccess() {
+async function checkIP() {
     try {
-        // Fetch visitor info
-        const res = await fetch("https://ipapi.co/json/");
+        const res = await fetch("https://api.ipify.org?format=json");
         const data = await res.json();
-
         const userIP = data.ip;
-        const userCountry = data.country;
 
         if(blockedIPs.includes(userIP)) {
             document.getElementById("message").innerText = "Access blocked for your IP.";
-        } else if(userCountry === "US") {
-            document.getElementById("message").innerText = "Access blocked for your country.";
         } else {
-            // Redirect allowed users
             window.location.href = targetLink;
         }
     } catch (e) {
@@ -43,7 +35,7 @@ async function checkAccess() {
     }
 }
 
-checkAccess();
+checkIP();
 </script>
 </body>
 </html>
