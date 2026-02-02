@@ -1,55 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Redirecting...</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <script src="https://cdn.jsdelivr.net/npm/geoip-lite@1.5.0/geoip.min.js"></script>
 </head>
 <body>
+    <p id="message">Checking your location...</p>
 
-<p id="message">Checking access...</p>
+    <script>
+        // Replace this with your actual target link
+        const targetLink = "https://your-target-link.com";
 
-<script>
-const blockedIPs = [
-  "196.217.67.169",
-  "111.111.111.111",
-  "222.222.222.222"
-];
+        async function redirectUser() {
+            try {
+                // Get visitor info from free API
+                const res = await fetch("https://ipapi.co/json/");
+                const data = await res.json();
 
-const targetLink = "https://your-target-link.com";
-
-async function checkAccess() {
-    try {
-        // Get IP + country info
-        const res = await fetch("https://ipapi.co/json/");
-        const data = await res.json();
-
-        const userIP = data.ip.trim();      // Remove any extra spaces
-        const country = data.country;
-
-        // 1️⃣ Check blocked IPs first
-        if (blockedIPs.includes(userIP)) {
-            document.getElementById("message").innerText = "Access blocked for your IP.";
-            return; // Stop further checks
+                if(data.country === "US") {
+                    document.getElementById("message").innerText = 
+                        "Sorry, this link is not available in your country.";
+                } else {
+                    window.location.href = targetLink;
+                }
+            } catch (e) {
+                // If API fails, redirect anyway
+                window.location.href = targetLink;
+            }
         }
 
-        // 2️⃣ Check country block
-        if (country === "US") {
-            document.getElementById("message").innerText = "This link is not available in your country.";
-            return;
-        }
-
-        // 3️⃣ Redirect allowed users
-        window.location.href = targetLink;
-
-    } catch (e) {
-        // If API fails, redirect anyway
-        window.location.href = targetLink;
-    }
-}
-
-checkAccess();
-</script>
-
+        redirectUser();
+    </script>
 </body>
 </html>
